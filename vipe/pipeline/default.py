@@ -53,6 +53,7 @@ class DefaultAnnotationPipeline(Pipeline):
         self.out_path = Path(self.out_cfg.path)
         self.out_path.mkdir(exist_ok=True, parents=True)
         self.camera_type = CameraType(self.init_cfg.camera_type)
+        self.save_pose_only = bool(getattr(self.out_cfg, "save_pose_only", False))
 
     def _add_init_processors(self, video_stream: VideoStream) -> ProcessedVideoStream:
         init_processors: list[StreamProcessor] = []
@@ -132,6 +133,8 @@ class DefaultAnnotationPipeline(Pipeline):
                 io.save_artifacts(artifact_path, output_stream)
                 with artifact_path.meta_info_path.open("wb") as f:
                     pickle.dump({"ba_residual": slam_output.ba_residual}, f)
+            elif self.save_pose_only:
+                io.save_pose_artifacts(artifact_path, output_stream)
 
             if self.out_cfg.save_viz:
                 save_projection_video(

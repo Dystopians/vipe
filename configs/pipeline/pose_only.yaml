@@ -1,0 +1,15 @@
+defaults:
+  - default
+
+init:
+  instance: null
+
+post:
+  depth_align_model: null
+
+output:
+  save_artifacts: false
+  save_pose_only: true
+  save_viz: false
+  save_slam_map: false
+
